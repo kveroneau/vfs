@@ -4,7 +4,7 @@ program vfs;
 
 uses
   classes, sysutils, appserver{$IFDEF HTTP}, fpwebfile{$ENDIF},
-  httproute, HTTPDefs, fpTemplate, FileUtil, iniwebsession, vfs6502, logger,
+  httproute, HTTPDefs, fpTemplate, FileUtil, iniwebsession, vfs6502, klogger,
   vfsinfo, fphttpclient, ScriptSystem;
 
 type

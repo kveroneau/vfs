@@ -5,7 +5,7 @@ unit vfs6502;
 interface
 
 uses
-  Classes, SysUtils, lib6502, HTTPDefs, iniwebsession, webutil, logger,
+  Classes, SysUtils, lib6502, HTTPDefs, iniwebsession, webutil, klogger,
   BlowFish, memcard, fphttpclient, appserver, vfsinfo, fpTemplate;
 
 type
