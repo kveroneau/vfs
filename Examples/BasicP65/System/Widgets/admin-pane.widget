@@ -1,0 +1,4 @@
+<tr align="center"><td><a class="nav" href="/vfs/?vfs=y">Siteroot</a></td></tr>
+<tr align="center"><td><a class="nav" href="/vfs/Admin/">Admin</a></td></tr>
+<tr align="center"><td><a class="nav" href="/vfs/System/">System files</a></td></tr>
+<tr align="center"><td><a class="nav" href="/vfs/System/logout.prg">Logout</a></td></tr>
