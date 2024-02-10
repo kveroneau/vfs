@@ -3,10 +3,10 @@
 .export _puts
 .export _SetSiteTitle, _SetPageTitle, _SetTemplate, _SetSiteHeader, _SetAdminPass
 .export _SetContentHandler, _EndRequest, _SetRedirect
-.export _SetFolderVector, _SetInfoVector, _SetAdminVector
+.export _SetFolderVector, _SetInfoVector, _SetAdminVector, _SetShellVector
 
 .export _GetQuery, _IsQuery
-.export _GetPost, _SetSession, _GetSession
+.export _GetPost, _IsPost, _SetSession, _GetSession, _IsSession
 
 .export _GetPRGName, _GetPathInfo, _GetPrefix
 .export _FileExists, _LoadPRGFile
@@ -14,9 +14,15 @@
 
 .export _PostbackWidget, _LogHTML, _LogVersion
 
-.export _frcdata
+.export _AddRunHook, _AddIndex, _AddTag
+
+.export _WebGet, _WebPut
+
+.export _frcdata, _runcount, _load_addr, _pcallkey
 
 _frcdata = $1a00
+_runcount = $ac
+_load_addr = $60
 
 .proc _puts: near
     sta $40
@@ -98,6 +104,24 @@ _frcdata = $1a00
     rts
 .endproc
 
+.proc _SetShellVector: near
+    sta $ae
+    stx $af
+    rts
+.endproc
+
+.proc _SetContentType: near
+    sta $b0
+    stx $b1
+    rts
+.endproc
+
+.proc _SetTagVector: near
+    sta $b2
+    stx $b3
+    rts
+.endproc
+
 .proc _GetQuery: near
     sta $44
     stx $45
@@ -128,6 +152,16 @@ _frcdata = $1a00
     jmp $ffe0
 .endproc
 
+.proc _IsPost: near
+    sta $44
+    stx $45
+    jsr popax
+    sta $42
+    stx $43
+    ldy #$23
+    jmp $ffe0
+.endproc
+
 .proc _SetSession: near
     sta $40
     stx $41
@@ -145,6 +179,16 @@ _frcdata = $1a00
     sta $42
     stx $43
     ldy #$30
+    jmp $ffe0
+.endproc
+
+.proc _IsSession: near
+    sta $44
+    stx $45
+    jsr popax
+    sta $42
+    stx $43
+    ldy #$31
     jmp $ffe0
 .endproc
 
@@ -259,7 +303,7 @@ _frcdata = $1a00
     jsr popax
     sta $42
     stx $43
-    sty #$80
+    ldy #$80
     jmp $ffd0
 .endproc
 
@@ -273,4 +317,57 @@ _frcdata = $1a00
     jsr st40
     ldy #$82
     jmp $ffd0
+.endproc
+
+.proc _pcallkey: near
+    sta $90
+    stx $91
+    rts
+.endproc
+
+.proc _AddRunHook: near
+    jsr st40
+    ldy #$80
+    jmp $ffc0
+.endproc
+
+.proc _AddIndex: near
+    jsr st40
+    ldy #$81
+    jmp $ffc0
+.endproc
+
+.proc _AddTag: near
+    jsr st40
+    jsr popax
+    sta $42
+    stx $43
+    ldy #$82
+    jmp $ffc0
+.endproc
+
+.proc doweb: near
+    jsr st40
+    jsr popax
+    sta $46
+    stx $47
+    cpy #$81
+    bne :+
+    jsr popax
+    sta $48
+    stx $49
+:   jsr $ffe0
+    lda $48
+    ldx $49
+    rts
+.endproc
+
+.proc _WebGet: near
+    ldy #$80
+    jmp doweb
+.endproc
+
+.proc _WebPut: near
+    ldy #$81
+    jmp doweb
 .endproc
